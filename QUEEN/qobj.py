@@ -635,7 +635,7 @@ class QUEEN():
             elif type(record) == SeqRecord:
                 record = record 
             else:
-                record = SeqIO.parse(record,None)
+                record = SeqIO.parse(record, "genbank")
 
             self._seq = str(record.seq).upper()
             self.record = record            
