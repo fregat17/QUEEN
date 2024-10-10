@@ -49,10 +49,10 @@ feature_color_dict["CDS"]           = list(zip(pastel, colorblind))
 misc_colors                         = list(zip(pastel, colorblind))
 
 
-def map_feat(fig, ax, ax2, feats, length, head_length=np.pi * 0.030, enlarge=1.0, format=1, bottom=300, fontsize=10, display_label=True, display_axis=True, tick_space="auto", labelcolor="k"):
+def map_feat(fig, ax, ax2, feats, length, head_length=np.pi * 0.03, enlarge=1.0, format=1, bottom=300, fontsize=10, display_label=True, display_axis=True, tick_space="auto", labelcolor="k"):
     if format == 0 or format == 1:
-        outer    = 55 * 1.2
-        inner    = 42 * 1.2
+        outer    = 50 * 1.2
+        inner    = 40 * 1.2
         if bottom is None and format == 1:
             bottom_h = 600
         elif bottom is None and format == 0:
@@ -68,17 +68,20 @@ def map_feat(fig, ax, ax2, feats, length, head_length=np.pi * 0.030, enlarge=1.0
         if fontsize is None:
             matplotlib.rcParams['font.size'] = 8.0
         else:
-            matplotlib.rcParams['font.size'] = 8.0
+            matplotlib.rcParams['font.size'] = fontsize
     else:
         outer    = 60
-        inner    = 44
+        inner    = 48
         if bottom is None:
             bottom_h = 400
         else:
             bottom_h = bottom 
-        lane_h   = 250
+        lane_h   = 180
         normal_w = 1000
-        matplotlib.rcParams['font.size'] = 7.0
+        if fontsize is None:
+            matplotlib.rcParams['font.size'] = 8.0
+        else:
+            matplotlib.rcParams['font.size'] = fontsize
     
     fig_width  = normal_w
     renderer   = fig.canvas.get_renderer()
@@ -129,7 +132,8 @@ def map_feat(fig, ax, ax2, feats, length, head_length=np.pi * 0.030, enlarge=1.0
             if flag == 1:
                 label_color_dict[label] = (feat.qualifiers["facecolor_queen"][0], feat.qualifiers["edgecolor_queen"][0]) 
              
-
+    
+    y = 0
     for i, feat in enumerate(feats):
         if "label" in feat.qualifiers:
             if type(feat.qualifiers["label"]) == list:
@@ -142,20 +146,18 @@ def map_feat(fig, ax, ax2, feats, length, head_length=np.pi * 0.030, enlarge=1.0
         if label == "":
             label = " "
 
-        strand = feat.location.strand
+        strand    = feat.location.strand
         if strand == -1:
-            gs_origin = feat.location.parts[-1].start.position 
-            ge_origin = feat.location.parts[0].end.position
-            gs = gs_origin * 2 * np.pi / length
-            ge = ge_origin * 2 * np.pi / length 
+            gs_origin = int(feat.location.parts[-1].start)
+            ge_origin = int(feat.location.parts[0].end) 
         else:
-            gs_origin = feat.location.parts[0].start.position 
-            ge_origin = feat.location.parts[-1].end.position
-            gs = gs_origin * 2 * np.pi / length 
-            ge = ge_origin * 2 * np.pi / length
+            gs_origin = int(feat.location.parts[0].start)
+            ge_origin = int(feat.location.parts[-1].end) 
 
-        
-        y = 0
+        gs = gs_origin * 2 * np.pi / length 
+        ge = ge_origin * 2 * np.pi / length
+
+        #y = 0
         if i > 0:
             flag = 0
             if gs_origin < ge_origin:
@@ -171,7 +173,7 @@ def map_feat(fig, ax, ax2, feats, length, head_length=np.pi * 0.030, enlarge=1.0
                     gene_position_matrix.append([0] * length)
                     text_position_matrix.append(np.array([0] * length))
                     text_position_matrix.append(np.array([0] * length))
-                    text_position_matrix.append(np.array([0] * length))
+                    #text_position_matrix.append(np.array([0] * length))
                 else:
                     pass 
             else:
@@ -194,7 +196,7 @@ def map_feat(fig, ax, ax2, feats, length, head_length=np.pi * 0.030, enlarge=1.0
                     gene_position_matrix.append([0] * length)
                     text_position_matrix.append(np.array([0] * length))
                     text_position_matrix.append(np.array([0] * length))
-                    text_position_matrix.append(np.array([0] * length))
+                    #text_position_matrix.append(np.array([0] * length))
                 else:
                     pass 
         
@@ -230,7 +232,7 @@ def map_feat(fig, ax, ax2, feats, length, head_length=np.pi * 0.030, enlarge=1.0
         if format == 1 or format == 0:
             margin = np.pi*(0.006)
         else:
-            margin = np.pi*(0.005)
+            margin = np.pi*(0.006)
         
         if abs(ge-gs) < head_length * 1.2:
             hl  = abs(ge-gs)
