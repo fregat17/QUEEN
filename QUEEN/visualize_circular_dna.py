@@ -349,7 +349,11 @@ def map_feat(fig, ax, ax2, feats, length, head_length=np.pi * 0.03, enlarge=1.0,
             while new_ge_origin > length:
                 new_ge_origin = new_ge_origin - length 
             
-            gs_origin, ge_origin = int(new_gs_origin), int(new_ge_origin+1)
+            try:
+                gs_origin, ge_origin = int(new_gs_origin), int(new_ge_origin)
+            except ValueError:
+                gs_origin, ge_origin = 0, 1
+                
             flag = 0 
             if i > 0:
                 if gs_origin < ge_origin:
@@ -437,7 +441,11 @@ def map_feat(fig, ax, ax2, feats, length, head_length=np.pi * 0.03, enlarge=1.0,
             while new_ge_origin >= length:
                 new_ge_origin = new_ge_origin - length 
             
-            gs_origin, ge_origin = int(new_gs_origin), int(new_ge_origin) 
+            try:
+                gs_origin, ge_origin = int(new_gs_origin), int(new_ge_origin)
+            except ValueError:
+                gs_origin, ge_origin = 0, 0
+                
             for char, (theta, height, y, pos, x, btw) in zip(label, new_pos_list):
                 if tflag == 1 or display_label>=1:
                     ax.text(theta, height, char, ha="center", va="center", rotation=rotation(theta), zorder=10, fontsize=fontsize, color=labelcolor)
